@@ -177,6 +177,16 @@ void HloTfGraphBuilder::SetNodeAttrs(const HloInstruction* instruction,
     case HloOpcode::kCustomCall:
       attrs["custom_call_target"].set_s(instruction->custom_call_target());
       break;
+    case HloOpcode::kConvolution:
+      for (const WindowDimension& window_dim : instruction->window().dimensions()){
+        attrs["window_size"].mutable_list()->add_i(window_dim.size());
+        attrs["stride"].mutable_list()->add_i(window_dim.stride());
+        attrs["padding_high"].mutable_list()->add_i(window_dim.padding_high());
+        attrs["padding_low"].mutable_list()->add_i(window_dim.padding_low());
+        attrs["window_dilation"].mutable_list()->add_i(window_dim.window_dilation());
+        attrs["base_dilation"].mutable_list()->add_i(window_dim.base_dilation());
+      }
+      break;
     default:
       break;
   }
